@@ -37,30 +37,16 @@ def giftwrap(listPts):
     chull = []
     while k != len(listPts) - 1 :
         chull.append(listPts[k])
-        print("---------------------------------------------------")
-        #im not sure if im meant to be using listPts here
-        print('i = ' + str(i) + ' k = ' + str(k))
         listPts[i], listPts[k] = listPts[k], listPts[i]
         min_angle = 361
-        print("min angle " + str(min_angle))
-        print("v is " + str(v))
-        print("i is " + str(listPts[i]))
         #Check the angle betweem this point and every other point
         for j in range(i+1, len(listPts)):
-            print("angle = theta(" + str(listPts[i]) + ", " + str(listPts[j]) + ") = " + str(theta(listPts[i], listPts[j])))
             angle = theta(listPts[i], listPts[j])
-            print(listPts[j])
-            print(angle)
             if (angle < min_angle) and (angle > v) and (listPts[j] != listPts[i]):
                 min_angle = angle
                 k = j
-            print("min angle is now " + str(min_angle))
-        print(">>k is  " + str(listPts[k]) +", number " + str(k))
-        print(listPts)
         i+= 1
         v = min_angle
-        print("---------------------------------------------------")
-    #print(chull)
     return chull
     
 def theta (pointA, pointB):
@@ -68,20 +54,22 @@ def theta (pointA, pointB):
     AB and a horizontal line through A"""
     dx = pointB[0] - pointA[0]
     dy = pointB[1]  - pointA[1]
-    #print("dx " + str(dx))
-    #print("dy " + str(dy))
     if abs(dx) < 1.e-6 and abs(dy) < 1.e-6: 
         t = 0
     else:
         t = dy/(abs(dx) + abs(dy))
-        #print("calculated angle " + str(t))
     #if dx is negitive
     if dx < 0:
         t = 2 - t
-    elif dy <= 0:
+    #if dy is negitive
+    elif dy < 0:
         t = 4 + t
-    #print("ANGLE " + str(t*90))
-    return t * 90
+    
+    #set the angle to 360 if it is 0
+    angle = t * 90
+    if angle == 0:
+        angle = 360
+    return angle
 
 def calculate_bottom_right_point(listPts):
     #get the first y value, assuming you van never have two points at the same position
@@ -106,14 +94,30 @@ def grahamscan(listPts):
     """
     lowest_point_index = calculate_bottom_right_point(listPts)
     lowest_point = listPts[lowest_point_index]
-    
+    print(lowest_point)
     #Sort all points by angle
-    sorted_points = sort_points_by_angle(listPts)
+    simple_closed_path = sort_points_by_angle(listPts, lowest_point)
+    point_stack = [listPts[0], listPts[1], listPts[2]]
+    
+    chull = []
+    
+    
+    
     return  chull
 
 
-def sort_points_by_angle(listPts):
-    pass
+def sort_points_by_angle(listPts, start_point):
+    points_and_angles = {}
+    for point in listPts:
+        print(point)
+        if point != start_point:
+            point_angle = theta(point ,start_point)
+            points_and_angles.update({point : point_angle})
+  
+    sorted_points = sorted(points_and_angles, key=points_and_angles.__getitem__)
+    return sorted_points
+    
+        
 
 def amethod(listPts):
     """Returns the convex hull vertices computed using 
@@ -125,10 +129,10 @@ def amethod(listPts):
 
 def main():
     #listPts = readDataPts('A_3000.dat', 3000)  #File name, numPts given as example onl
-    listPts =[(0.0,0.0),(1.0, -0.5),(1.0,1.0),(0.0,1.0),(0.5,0.5),(0.5, 1.5)]
-    print(listPts)
+    listPts =[(0.0,0.0),(1.0, 0),(1.0,1.0),(0.0,1.0),(0.5,0.5),(0.5, 1.5)]
+    #print(listPts)
     print(giftwrap(listPts))   #You may replace these three print statements
-    #print (grahamscan(listPts))   #with any code for validating your outputs
+    print (grahamscan(listPts))   #with any code for validating your outputs
     #print (amethod(listPts))     
 
  
