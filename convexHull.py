@@ -104,9 +104,16 @@ def grahamscan(listPts):
          Graham-scan algorithm as a list of m tuples
          [(u0,v0), (u1,v1), ...]  
     """
-    #Your implementation goes here
+    lowest_point_index = calculate_bottom_right_point(listPts)
+    lowest_point = listPts[lowest_point_index]
+    
+    #Sort all points by angle
+    sorted_points = sort_points_by_angle(listPts)
     return  chull
 
+
+def sort_points_by_angle(listPts):
+    pass
 
 def amethod(listPts):
     """Returns the convex hull vertices computed using 
