@@ -26,14 +26,17 @@ def giftwrap(listPts):
           [(u0,v0), (u1,v1), ...]    
     """
     k = calculate_bottom_right_point(listPts)
+    print((listPts[k]))
     listPts.append(listPts[k])
+    initial_point = listPts[k]
     #i = current position in the array
     i = 0
     # v = angle
     v = 0    
-    print(listPts)
-    chull = set()
-    while k != len(listPts) - 1:
+    #print(listPts)
+    chull = []
+    while k != len(listPts) - 1 :
+        chull.append(listPts[k])
         print("---------------------------------------------------")
         #im not sure if im meant to be using listPts here
         print('i = ' + str(i) + ' k = ' + str(k))
@@ -48,16 +51,16 @@ def giftwrap(listPts):
             angle = theta(listPts[i], listPts[j])
             print(listPts[j])
             print(angle)
-            if (angle <= min_angle) and (angle >= v) and (listPts[j] != listPts[i]):
+            if (angle < min_angle) and (angle > v) and (listPts[j] != listPts[i]):
                 min_angle = angle
                 k = j
             print("min angle is now " + str(min_angle))
-        print("k is  " + str(listPts[k]))
-        chull.add(listPts[k])
+        print(">>k is  " + str(listPts[k]) +", number " + str(k))
+        print(listPts)
         i+= 1
         v = min_angle
         print("---------------------------------------------------")
-    print(chull)
+    #print(chull)
     return chull
     
 def theta (pointA, pointB):
@@ -65,16 +68,19 @@ def theta (pointA, pointB):
     AB and a horizontal line through A"""
     dx = pointB[0] - pointA[0]
     dy = pointB[1]  - pointA[1]
-    t = 0
+    #print("dx " + str(dx))
+    #print("dy " + str(dy))
     if abs(dx) < 1.e-6 and abs(dy) < 1.e-6: 
         t = 0
     else:
         t = dy/(abs(dx) + abs(dy))
+        #print("calculated angle " + str(t))
     #if dx is negitive
     if dx < 0:
         t = 2 - t
-    if dy < 0:
+    elif dy <= 0:
         t = 4 + t
+    #print("ANGLE " + str(t*90))
     return t * 90
 
 def calculate_bottom_right_point(listPts):
@@ -111,7 +117,8 @@ def amethod(listPts):
 
 
 def main():
-    listPts = readDataPts('test.dat', 5)  #File name, numPts given as example onl
+    #listPts = readDataPts('A_3000.dat', 3000)  #File name, numPts given as example onl
+    listPts =[(0.0,0.0),(1.0, -0.5),(1.0,1.0),(0.0,1.0),(0.5,0.5),(0.5, 1.5)]
     print(listPts)
     print(giftwrap(listPts))   #You may replace these three print statements
     #print (grahamscan(listPts))   #with any code for validating your outputs
