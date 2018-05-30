@@ -94,32 +94,46 @@ def grahamscan(listPts):
     """
     lowest_point_index = calculate_bottom_right_point(listPts)
     lowest_point = listPts[lowest_point_index]
-    print(lowest_point)
     #Sort all points by angle
     simple_closed_path = sort_points_by_angle(listPts, lowest_point)
-    point_stack = [listPts[0], listPts[1], listPts[2]]
-    
-    chull = []
-    
-    
-    
-    return  chull
+    point_stack = [
+        simple_closed_path[0],
+        simple_closed_path[1],
+        simple_closed_path[2]
+    ]
+    for point in simple_closed_path[3:]:
+        while not(isCCW(point_stack[-2], point_stack[-1], point)):
+            popped_point = point_stack.pop()
+        
+        point_stack.append(point)
+        print(point_stack)
+    return point_stack
 
+def isCCW(pointA, pointB, pointC):
+    return line_function(pointA, pointB, pointC) > 0
+
+def line_function(pointA, pointB, pointC):
+    return(
+        (pointB[0] - pointA[0]) * (pointC[1] - pointA[1]) -\
+        (pointB[1] - pointA[1])  * (pointC[0] - pointA[0])
+        )
 
 def sort_points_by_angle(listPts, start_point):
     points_and_angles = {}
     for point in listPts:
-        print(point)
+        #print(point)
         if point != start_point:
             point_angle = theta(point ,start_point)
             points_and_angles.update({point : point_angle})
-  
+        else:
+            point_angle = 0
+            points_and_angles.update({point : point_angle})
     sorted_points = sorted(points_and_angles, key=points_and_angles.__getitem__)
     return sorted_points
     
         
 
-def amethod(listPts):
+def quick_hull(listPts):
     """Returns the convex hull vertices computed using 
           a third algorithm
     """
@@ -128,10 +142,10 @@ def amethod(listPts):
 
 
 def main():
-    #listPts = readDataPts('A_3000.dat', 3000)  #File name, numPts given as example onl
-    listPts =[(0.0,0.0),(1.0, 0),(1.0,1.0),(0.0,1.0),(0.5,0.5),(0.5, 1.5)]
-    #print(listPts)
-    print(giftwrap(listPts))   #You may replace these three print statements
+    listPts = readDataPts('A_3000.dat', 3000)  #File name, numPts given as example onl
+    #listPts =[(0.0,0.0),(1.0, 0),(1.0,1.0), (1.0, 2.0),(0.0,1.0),(0.5,0.5),(0.5, 1.5)]
+    print(listPts)
+    #print(giftwrap(listPts))   #You may replace these three print statements
     print (grahamscan(listPts))   #with any code for validating your outputs
     #print (amethod(listPts))     
 
