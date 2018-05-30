@@ -73,16 +73,16 @@ def theta (pointA, pointB):
 
 def calculate_bottom_right_point(listPts):
     #get the first y value, assuming you van never have two points at the same position
+    lowest_point_index = 0
     lowest_point = listPts[0]
-    for point in listPts[1:]:
+    for index, point in enumerate(listPts):
         x_value, y_value = point
         if y_value < lowest_point[1]: 
-            lowest_point = point
+            lowest_point_index = index
         elif y_value == lowest_point[1] and x_value > lowest_point[0]:
-            lowest_point = point
+            lowest_point_index = index
 
-    index_of_point = listPts.index(lowest_point)
-    return index_of_point
+    return lowest_point_index
     
     
         
@@ -106,7 +106,6 @@ def grahamscan(listPts):
             popped_point = point_stack.pop()
         
         point_stack.append(point)
-        print(point_stack)
     return point_stack
 
 def isCCW(pointA, pointB, pointC):
@@ -133,21 +132,49 @@ def sort_points_by_angle(listPts, start_point):
     
         
 
-def quick_hull(listPts):
+def amethod(listPts):
     """Returns the convex hull vertices computed using 
-          a third algorithm
+          the monotone algorithm
     """
-    #Your implementation goes here    
+    chull = []
+    #lower_hull = []
+    #upper_hull = []
+    lower_hull = build_half(sorted(listPts))
+    upper_hull = build_half(reversed(sorted(listPts)))
+    
+    #build the upper hull
+    #sorted_list = sorted(listPts)
+    #for point in sorted_list:
+        #while len(lower_hull) >= 2 and not isCCW(lower_hull[-2], lower_hull[-1], point):
+            #lower_hull.pop()
+        #lower_hull.append(point)
+        
+    ##build the lower hull
+    #for point in reversed(sorted(sorted_list)):
+        #while (len(upper_hull) >= 2) and not isCCW(upper_hull[-2], upper_hull[-1], point):
+            #upper_hull.pop()
+        #upper_hull.append(point)
+    
+    chull = lower_hull[:-1] + upper_hull[:-1]
     return chull
 
 
+def build_half(listPts):
+    hull = []
+    for point in listPts:
+        while len(hull) >= 2 and not isCCW(hull[-2], hull[-1], point):
+            hull.pop()
+        hull.append(point)    
+    return hull
+
+
 def main():
-    listPts = readDataPts('A_3000.dat', 3000)  #File name, numPts given as example onl
-    #listPts =[(0.0,0.0),(1.0, 0),(1.0,1.0), (1.0, 2.0),(0.0,1.0),(0.5,0.5),(0.5, 1.5)]
+    #listPts = readDataPts('A_3000.dat', 3000)  #File name, numPts given as example onl
+    listPts =[(0.0,0.0),(1.0, 0),(1.0,1.0), (1.0, 2.0),(0.0,1.0),(0.5,0.5),(0.5, 1.5)]
     print(listPts)
     #print(giftwrap(listPts))   #You may replace these three print statements
-    print (grahamscan(listPts))   #with any code for validating your outputs
-    #print (amethod(listPts))     
+    #print (grahamscan(listPts))   #with any code for validating your outputs
+    print (amethod(listPts))     
 
  
 if __name__  ==  "__main__":
