@@ -3,6 +3,7 @@
    Student Name: Samuel Dravitzki
    Usercode: 62070502
 """
+import os
 
 def readDataPts(filename, N):
     """Reads the first N lines of data from the input file
@@ -79,10 +80,19 @@ def calculate_bottom_right_point(listPts):
         x_value, y_value = point
         if y_value < lowest_point[1]: 
             lowest_point_index = index
+            lowest_point = point
         elif y_value == lowest_point[1] and x_value > lowest_point[0]:
             lowest_point_index = index
-
+            lowest_point = point
+    print(lowest_point_index)
     return lowest_point_index
+    #lowest_point = listPts[0]
+    #for point in listPts[1:]:
+        #x_value, y_value = point
+        #if y_value < lowest_point[1]:
+            #lowest_point = point
+        #elif y_value == lowest_point[1] and x_value > lowest_point[0]:
+            #lowest_point = point
     
     
         
@@ -136,28 +146,10 @@ def amethod(listPts):
     """Returns the convex hull vertices computed using 
           the monotone algorithm
     """
-    chull = []
-    #lower_hull = []
-    #upper_hull = []
     lower_hull = build_half(sorted(listPts))
     upper_hull = build_half(reversed(sorted(listPts)))
-    
-    #build the upper hull
-    #sorted_list = sorted(listPts)
-    #for point in sorted_list:
-        #while len(lower_hull) >= 2 and not isCCW(lower_hull[-2], lower_hull[-1], point):
-            #lower_hull.pop()
-        #lower_hull.append(point)
-        
-    ##build the lower hull
-    #for point in reversed(sorted(sorted_list)):
-        #while (len(upper_hull) >= 2) and not isCCW(upper_hull[-2], upper_hull[-1], point):
-            #upper_hull.pop()
-        #upper_hull.append(point)
-    
     chull = lower_hull[:-1] + upper_hull[:-1]
     return chull
-
 
 def build_half(listPts):
     hull = []
@@ -167,14 +159,15 @@ def build_half(listPts):
         hull.append(point)    
     return hull
 
-
 def main():
-    #listPts = readDataPts('A_3000.dat', 3000)  #File name, numPts given as example onl
-    listPts =[(0.0,0.0),(1.0, 0),(1.0,1.0), (1.0, 2.0),(0.0,1.0),(0.5,0.5),(0.5, 1.5)]
+    listPts = readDataPts('Set_A/A_3000.dat', 3000)  #File name, numPts given as example onl
+    #listPts =[(0.0,0.0),(1.0, 0),(1.0,1.0), (1.0, 2.0),(0.0,1.0),(0.5,0.5),(0.5, 1.5)]
     print(listPts)
-    #print(giftwrap(listPts))   #You may replace these three print statements
+    print(giftwrap(listPts))   #You may replace these three print statements
     #print (grahamscan(listPts))   #with any code for validating your outputs
     print (amethod(listPts))     
+
+
 
  
 if __name__  ==  "__main__":
